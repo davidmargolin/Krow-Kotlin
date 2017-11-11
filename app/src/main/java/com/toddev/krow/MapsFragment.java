@@ -58,7 +58,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         workref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                for (DataSnapshot workplace: dataSnapshot.getChildren()){
+                    workarray.add(workplace.getValue(Workplace.class));
+                }
 
             }
 
@@ -66,14 +68,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        })
-        //create 2 workplace objects
-        Workplace Work1 = new Workplace("Round K", new LatLng(40.718896,-73.990929));
-        Workplace Work2 = new Workplace("Round X", new LatLng(40.668896,-73.940929));
+        });
 
-        //add them to an array
-        workarray.add(Work1);
-        workarray.add(Work2);
 
         // get the mapview from layout based on id map
         mapView = (MapView) rootView.findViewById(R.id.map);

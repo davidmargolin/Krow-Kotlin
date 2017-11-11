@@ -12,7 +12,7 @@ public class Workplace {
     private String description;
 
 
-    public Workplace(String name, LatLng location, Amenities amenities, int numRated;
+    public Workplace(String name, LatLng location, Amenities amenities, int numRated,
                      double rating, String creator_id, String description, String address) {
         this.name = name;
         this.location = location;
@@ -26,10 +26,10 @@ public class Workplace {
 
     public boolean newRating(int userRating) {
         if(userRating <= 5) {
-            double sumOfratings = this.rating * this.numRated;
+            double sumOfRatings = this.rating * this.numRated;
             this.numRated++;
-            sumOfratings =+ userRating;
-            this.rating = sumOfratings/this.num_rated;
+            sumOfRatings += userRating;
+            this.rating = sumOfRatings/this.numRated;
             return true;
         }
         else {
