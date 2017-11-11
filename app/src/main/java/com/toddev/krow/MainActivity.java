@@ -9,10 +9,17 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity{
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -21,7 +28,6 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //set view to res -> layout -> activity main.xml (in layouts)
         setContentView(R.layout.activity_main);
 
@@ -36,24 +42,6 @@ public class MainActivity extends AppCompatActivity{
 
         //set controller to SectionsPagerAdapter class(below)
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        final FloatingActionButton viewButton = (FloatingActionButton) findViewById(R.id.list);
-
-        viewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isList) {
-                    mViewPager.setCurrentItem(1, true);
-                    viewButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_play));
-                    isList=false;
-
-                }else{
-                    mViewPager.setCurrentItem(2, true);
-                    viewButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_rew));
-                    isList=true;
-                }
-            }
-        });
 
         if (savedInstanceState==null){
             mViewPager.setCurrentItem(1, false);

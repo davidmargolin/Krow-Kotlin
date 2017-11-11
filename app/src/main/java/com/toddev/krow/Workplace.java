@@ -11,6 +11,10 @@ public class Workplace {
     private String creator_id;
     private String description;
 
+    public Workplace(){
+
+    }
+
 
     public Workplace(String name, LatLng location, Amenities amenities, int numRated,
                      double rating, String creator_id, String description, String address) {
@@ -70,9 +74,6 @@ public class Workplace {
         this.description = description;
     }
 
-}
-
-
     public Amenities getAmenities() {
         return amenities;
     }
@@ -111,11 +112,5 @@ public class Workplace {
     public void setLocation(LatLng location) {
         this.location = location;
     }
-
-
-
-
-
-
 
 }

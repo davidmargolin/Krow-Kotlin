@@ -9,6 +9,10 @@ public class Amenities{
     private String space;
     private String wifi;
 
+    public Amenities(){
+
+    }
+
     public Amenities(String bathrooms, boolean food, String noise, String outlets, String space, String wifi) {
         this.bathrooms = bathrooms;
         this.food = food;

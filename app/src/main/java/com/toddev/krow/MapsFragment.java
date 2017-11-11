@@ -2,8 +2,8 @@ package com.toddev.krow;
 
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +16,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -33,9 +33,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     View rootView;
     private BottomSheetBehavior mBottomSheetBehavior;
     private TextView sheetTextName;
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference workref = database.getReference("workspaces");
-
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference workref = database.getReference("workspaces");
     public MapsFragment() {
     }
 
@@ -53,24 +52,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //open res -> layout -> activity maps
+
         rootView = inflater.inflate(R.layout.activity_maps, container, false);
         sheetTextName = rootView.findViewById(R.id.name);
-        workref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot workplace: dataSnapshot.getChildren()){
-                    workarray.add(workplace.getValue(Workplace.class));
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
         // get the mapview from layout based on id map
         mapView = (MapView) rootView.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
@@ -86,12 +70,35 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        Log.e(workref.getDatabase().toString(),"");
+        workref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.e("child was", "added");
+                Workplace place = dataSnapshot.getValue(Workplace.class);
+                mMap.addMarker(new MarkerOptions().position(place.getLocation()).title(place.getName()));
+            }
 
-        //create markers for items in our array
-        for (Workplace place: workarray) {
-            mMap.addMarker(new MarkerOptions().position(place.getLocation()).title(place.getName()));
-        }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         //create a location for nyc, set map location to make nyc the center and zoom to city level
         LatLng nyc = new LatLng(40.7128, -74.006);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(nyc));
