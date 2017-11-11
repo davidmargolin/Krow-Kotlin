@@ -1,11 +1,13 @@
 package com.toddev.krow;
 
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -14,6 +16,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -24,6 +27,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     MapView mapView;
     ArrayList<Workplace> workarray = new ArrayList<Workplace>();
     View rootView;
+    private BottomSheetBehavior mBottomSheetBehavior;
+    private TextView sheetTextName;
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     public MapsFragment() {
     }
@@ -42,6 +48,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         //open res -> layout -> activity maps
         rootView = inflater.inflate(R.layout.activity_maps, container, false);
+        sheetTextName = rootView.findViewById(R.id.name);
 
         //create 2 workplace objects
         Workplace Work1 = new Workplace("Round K", new LatLng(40.718896,-73.990929));
@@ -56,6 +63,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mapView.onCreate(savedInstanceState);
         //set it to respond to onMapReady below
         mapView.getMapAsync(this);
+        View bottomSheet = rootView.findViewById( R.id.bottom_sheet );
+        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        mBottomSheetBehavior.setPeekHeight(300);
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         return rootView;
     }
 
@@ -79,7 +90,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             public boolean onMarkerClick(Marker marker)
             {
                 //create a snackbar displaying the name
-                Snackbar.make(rootView.findViewById(R.id.linlay), marker.getTitle(), Snackbar.LENGTH_LONG).show();
+                sheetTextName.setText(marker.getTitle());
                 //move the camera to the marker location and zoom to street level
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
                 mMap.moveCamera(CameraUpdateFactory.zoomTo(15));

@@ -1,7 +1,8 @@
 package com.toddev.krow;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -10,12 +11,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
-
+public class MainActivity extends AppCompatActivity{
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-
+    private Boolean isList=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,22 +37,38 @@ public class MainActivity extends AppCompatActivity {
         //set controller to SectionsPagerAdapter class(below)
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        //get tablayout from layout based on id tabs
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        final FloatingActionButton viewButton = (FloatingActionButton) findViewById(R.id.list);
 
-        //control viewpager with the tablayout
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isList) {
+                    mViewPager.setCurrentItem(1, true);
+                    viewButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_play));
+                    isList=false;
 
-        //control tablayout with viewpager (they need to talk to each other both ways)
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+                }else{
+                    mViewPager.setCurrentItem(2, true);
+                    viewButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_rew));
+                    isList=true;
+                }
+            }
+        });
 
+        if (savedInstanceState==null){
+            mViewPager.setCurrentItem(1, false);
+        }
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return false;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //looks for menu items in res -> menu -> menu main
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -79,14 +97,18 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             //do things based on position
             switch (position){
+                case (0):
+                    return ProfileFragment.newInstance();
                 //if position is 1
                 case(1):
                     //show a mapsfragment
                     return MapsFragment.newInstance();
-                //else
+
+                case(2):
+                    return WorkSpaceFragment.newInstance(1);
+
                 default:
-                    //show a blankfragment
-                    return BlankFragment.newInstance();
+                    return null;
             }
         }
 
