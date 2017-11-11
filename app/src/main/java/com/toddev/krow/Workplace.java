@@ -6,38 +6,44 @@ public class Workplace {
     private String name;
     private LatLng location;
     private Amenities amenities;
-    private int num_rated;
+    private int numRated;
     private double rating;
     private String creator_id;
     private String description;
 
-    public Workplace(String name, LatLng location, Amenities amenities, int num_rated,
+
+    public Workplace(String name, LatLng location, Amenities amenities, int numRated;
                      double rating, String creator_id, String description, String address) {
         this.name = name;
         this.location = location;
         this.amenities = amenities;
-        this.num_rated = numRated;
+        this.numRated = numRated;
         this.rating = rating;
         this.creator_id = creator_id;
         this.description = description;
         this.address = address;
     }
 
-    public void newRating(int userRating) {
+    public boolean newRating(int userRating) {
         if(userRating <= 5) {
-            double sum = this.rating * this.numRated;
-            numRated++
-            this.rating = this.rating + userRating;
-            this.rating = this.rating/
-
+            double sumOfratings = this.rating * this.numRated;
+            this.numRated++;
+            sumOfratings =+ userRating;
+            this.rating = sumOfratings/this.num_rated;
+            return true;
+        }
+        else {
+            return false;
         }
     }
-    public int getNum_rated() {
-        return num_rated;
+
+
+    public int getNumRated() {
+        return numRated;
     }
 
-    public void setNum_rated(int num_rated) {
-        this.num_rated = num_rated;
+    public void setNumRated(int numRated) {
+        this.numRated = numRated;
     }
 
     public double getRating() {
