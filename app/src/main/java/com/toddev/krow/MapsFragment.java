@@ -16,7 +16,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -30,6 +34,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private BottomSheetBehavior mBottomSheetBehavior;
     private TextView sheetTextName;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference workref = database.getReference("workspaces");
 
     public MapsFragment() {
     }
@@ -43,13 +48,25 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         return fragment;
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //open res -> layout -> activity maps
         rootView = inflater.inflate(R.layout.activity_maps, container, false);
         sheetTextName = rootView.findViewById(R.id.name);
+        workref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        })
         //create 2 workplace objects
         Workplace Work1 = new Workplace("Round K", new LatLng(40.718896,-73.990929));
         Workplace Work2 = new Workplace("Round X", new LatLng(40.668896,-73.940929));

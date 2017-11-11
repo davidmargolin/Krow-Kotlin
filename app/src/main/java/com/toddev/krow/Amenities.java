@@ -1,7 +1,5 @@
 package com.toddev.krow;
 
-import com.google.android.gms.maps.model.LatLng;
-
 public class Amenities{
     private String bathrooms;
 
@@ -24,8 +22,8 @@ public class Amenities{
         return bathrooms;
     }
 
-    public void setBathrooms(String bathrooms) {
-        if(bathrooms == 'clean' || bathrooms == 'dirty' || bathrooms == 'none'){
+    public boolean setBathrooms(String bathrooms) {
+        if(bathrooms == "clean" || bathrooms == "dirty" || bathrooms == "none"){
             this.bathrooms = bathrooms;
             return true;
         }
@@ -38,7 +36,7 @@ public class Amenities{
         return food;
     }
 
-    public void setFood(boolean food) {
+    public boolean setFood(boolean food) {
         if(food) {
             this.food = food;
             return true;
@@ -52,8 +50,8 @@ public class Amenities{
         return noise;
     }
 
-    public void setNoise(String noise) {
-        if(noise == 'quiet' || noise == 'loud') {
+    public boolean setNoise(String noise) {
+        if(noise == "quiet" || noise == "loud") {
             this.noise = noise;
             return true;
         }
@@ -66,8 +64,8 @@ public class Amenities{
         return outlets;
     }
 
-    public void setOutlets(String outlets) {
-        if(outlets == 'many' || outlets == 'little') {
+    public boolean setOutlets(String outlets) {
+        if(outlets == "many" || outlets == "little") {
             this.outlets = outlets;
             return true;
         }
@@ -80,8 +78,8 @@ public class Amenities{
         return space;
     }
 
-    public void setSpace(String space) {
-        if(space == 'roomy' || space == 'cozy') {
+    public boolean setSpace(String space) {
+        if(space == "roomy" || space == "cozy") {
             this.space = space;
             return true;
         }
@@ -94,8 +92,8 @@ public class Amenities{
         return wifi;
     }
 
-    public void setWifi(String wifi) {
-        if(wifi == 'fast' || wifi == 'slow') {
+    public boolean setWifi(String wifi) {
+        if(wifi == "fast" || wifi == "slow") {
             this.wifi = wifi;
             return true;
         }
