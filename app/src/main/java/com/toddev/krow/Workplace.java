@@ -122,5 +122,41 @@ public class Workplace {
         this.name = name;
     }
 
+    public static int getWorkResource(String keyword){
+        switch (keyword){
+            //spacing
+            case ("Cozy"):
+                return R.drawable.ic_seat_legroom_reduced_grey600_24dp;
+            case ("Spacious"):
+                return R.drawable.ic_seat_legroom_extra_grey600_24dp;
+            //noise
+            case ("Loud"):
+                return R.drawable.ic_action_volume_up;
+            case ("Quiet"):
+                return R.drawable.ic_action_volume_down;
+            //wifi
+            case ("Wifi"):
+                return R.drawable.ic_action_wifi;
+            case ("No Wifi"):
+                return R.drawable.ic_action_signal_wifi_off;
+            //bathroom
+            case ("Bathroom"):
+                return R.drawable.ic_action_bathroom;
+            case ("No Bathroom"):
+                return R.drawable.ic_action_bathroom;
+            //food
+            case ("Food"):
+                return R.drawable.ic_action_restaurant_menu;
+            case ("No Food"):
+                return R.drawable.ic_action_restaurant_menu;
+            //outlet
+            case ("Power"):
+                return R.drawable.ic_action_power;
+            case ("No Power"):
+                return R.drawable.ic_action_power;
 
+            default:
+                return 0;
+        }
+    }
 }

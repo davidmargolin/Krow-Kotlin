@@ -1,47 +1,40 @@
 package com.toddev.krow;
 
 import android.os.Bundle;
-import android.support.design.widget.BottomSheetBehavior;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
-    private static final String ARG_SECTION_NUMBER = "section_number";
-    private GoogleMap mMap;
+    public GoogleMap mMap;
     MapView mapView;
-    ArrayList<Workplace> workarray = new ArrayList<Workplace>();
     View rootView;
-    private BottomSheetBehavior mBottomSheetBehavior;
-    private TextView sheetTextName;
-    private TextView sheetTextRating;
-    private TextView sheetTextDesc;
-    private TextView sheetNumRated;
 
 
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference workref = database.getReference("workspaces");
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    CollectionReference workref = db.collection("Workspaces");
     public MapsFragment() {
     }
 
@@ -61,56 +54,33 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         //open res -> layout -> activity maps
 
         rootView = inflater.inflate(R.layout.activity_maps, container, false);
-        sheetTextName = rootView.findViewById(R.id.name);
-        sheetTextRating = rootView.findViewById(R.id.rating);
-        sheetTextDesc = rootView.findViewById(R.id.desc);
-        sheetNumRated = rootView.findViewById(R.id.numrated);
         // get the mapview from layout based on id map
-        mapView = (MapView) rootView.findViewById(R.id.map);
+        mapView = rootView.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
         //set it to respond to onMapReady below
         mapView.getMapAsync(this);
-        View bottomSheet = rootView.findViewById( R.id.bottom_sheet );
-        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        mBottomSheetBehavior.setPeekHeight(300);
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         return rootView;
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(final GoogleMap googleMap) {
         mMap = googleMap;
-        //mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json);
-        workref.addChildEventListener(new ChildEventListener() {
+        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this.getActivity(), R.raw.style_json));
+        workref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Workplace place = dataSnapshot.getValue(Workplace.class);
-                Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(),place.getLongitude())).title(place.getName()));
-                marker.setTag(dataSnapshot.getValue(Workplace.class));
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (Workplace place : task.getResult().toObjects(Workplace.class)) {
+                        Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(),place.getLongitude())).title(place.getName()));
+                        marker.setTag(place);
+                    }
+                } else {
+                    Log.d("Error", "Error getting documents: ", task.getException());
+                }
             }
         });
         //create a location for nyc, set map location to make nyc the center and zoom to city level
-        LatLng nyc = new LatLng(40.7128, -74.006);
+        final LatLng nyc = new LatLng(40.7128, -74.006);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(nyc));
         mMap.moveCamera(CameraUpdateFactory.zoomTo(10));
 
@@ -119,13 +89,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public boolean onMarkerClick(Marker marker)
             {
-                //create a snackbar displaying the name
-                sheetTextName.setText(marker.getTitle());
-                Workplace markerobj = (Workplace) marker.getTag();
-                sheetTextRating.setText("Rating: "+markerobj.getRating());
-                sheetTextDesc.setText(markerobj.getDescription());
-                sheetNumRated.setText(Integer.toString(markerobj.getNumrated()) + "Reviews");
-                //move the camera to the marker location and zoom to street level
+                getFragmentManager().popBackStackImmediate();
+                Fragment newFragment = new WorkSpaceInfoFragment().WorkSpaceWithInfo((Workplace)marker.getTag(), googleMap);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.bottom_sheet, newFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
                 mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
                 return true;
@@ -134,7 +103,62 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
 
 
+        SearchView searchbar =getActivity().findViewById(R.id.search);
+        searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                    workref.whereEqualTo("name_lower", query.toLowerCase()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                getFragmentManager().popBackStackImmediate();
+                                mMap.clear();
+                                for (Workplace place : task.getResult().toObjects(Workplace.class)) {
+                                    Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName()));
+                                    marker.setTag(place);
+                                }
+                                getFragmentManager().popBackStackImmediate();
+                                Fragment newFragment = new WorkSpaceListFragment().withList(task.getResult().toObjects(Workplace.class));
+                                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                transaction.replace(R.id.bottom_sheet, newFragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                                mMap.moveCamera(CameraUpdateFactory.newLatLng(nyc));
+                                mMap.moveCamera(CameraUpdateFactory.zoomTo(10));
+
+                            } else {
+                                Log.d("Error", "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
     }
+
+    public void setMarker(Workplace workplace){
+        GoogleMap googleMap = mMap;
+        if (mMap !=null){
+            getFragmentManager().popBackStackImmediate();
+            Fragment newFragment = new WorkSpaceInfoFragment().WorkSpaceWithInfo(workplace, googleMap);
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.bottom_sheet, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(workplace.getLatitude(), workplace.getLongitude())));
+            mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+        }
+        else{
+            Toast.makeText(getActivity(), "Map not ready", Toast.LENGTH_LONG).show();
+        }
+    }
+
     @Override
     public void onResume() {
         mapView.onResume();

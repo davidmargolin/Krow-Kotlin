@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +16,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,11 +30,16 @@ public class MainActivity extends AppCompatActivity{
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private Boolean isList=false;
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private MapsFragment mapsFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         //set view to res -> layout -> activity main.xml (in layouts)
         setContentView(R.layout.activity_main);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         //get toolbar from layout based on id toolber
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -55,8 +65,7 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //looks for menu items in res -> menu -> menu main
-        //getMenuInflater().inflate(R.menu.menu_main, menu);
+        //getMenuInflater().inflate(R.menu.options_menu, menu);
         return true;
     }
 
@@ -73,7 +82,11 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-
+    public void setMarker(Workplace workplace){
+        if (mapsFragment != null){
+            mapsFragment.setMarker(workplace);
+        }
+    }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -90,10 +103,8 @@ public class MainActivity extends AppCompatActivity{
                 //if position is 1
                 case(1):
                     //show a mapsfragment
-                    return MapsFragment.newInstance();
-
-                case(2):
-                    return WorkSpaceFragment.newInstance(1);
+                    mapsFragment = MapsFragment.newInstance();
+                    return mapsFragment;
 
                 default:
                     return null;
@@ -103,7 +114,7 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public int getCount() {
             // 3 total pages.
-            return 3;
+            return 2;
         }
     }
 }

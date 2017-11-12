@@ -1,77 +1,82 @@
 package com.toddev.krow;
 
+import android.content.Context;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.toddev.krow.WorkSpaceFragment.OnListFragmentInteractionListener;
-import com.toddev.krow.dummy.DummyContent.DummyItem;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
+
 public class MyWorkSpaceRecyclerViewAdapter extends RecyclerView.Adapter<MyWorkSpaceRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
-    private final OnListFragmentInteractionListener mListener;
-
-    public MyWorkSpaceRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
-        mListener = listener;
+    private List<Workplace> workplaces;
+    Context context;
+    public MyWorkSpaceRecyclerViewAdapter(List<Workplace> places, Context context) {
+        workplaces = places;
+        this.context = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_workspace, parent, false);
+                .inflate(R.layout.workspace_list_item, parent, false);
+
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        holder.mNameView.setText(workplaces.get(position).getName());
+        holder.mDescView.setText(workplaces.get(position).getDescription());
+        holder.sheetAddress.setText(workplaces.get(position).getAddress());
+        if (workplaces.get(position).getNumrated()>0) {
+            holder.mRatingCountView.setText(workplaces.get(position).getNumrated()+ " Ratings");
+            holder.mRatingView.setText("Rating: "+workplaces.get(position).getRating());
 
+        }else {
+            holder.mRatingView.setText("Not Yet Rated");
+        }
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
+            public void onClick(View view) {
+                ((MainActivity)context).setMarker(workplaces.get(position));
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return workplaces.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public final TextView mNameView;
+        public final TextView mDescView;
+        public final TextView mRatingView;
+        public final TextView mRatingCountView;
+        public final TextView sheetAddress;
+
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
-        }
+            mRatingView = (TextView) view.findViewById(R.id.rating);
+            mNameView = (TextView) view.findViewById(R.id.name);
+            mDescView = (TextView) view.findViewById(R.id.desc);
+            mRatingCountView = (TextView) view.findViewById(R.id.numrated);
+            sheetAddress = (TextView) view.findViewById(R.id.address);
 
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+
         }
     }
 }

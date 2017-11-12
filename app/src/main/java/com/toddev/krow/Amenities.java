@@ -2,8 +2,7 @@ package com.toddev.krow;
 
 public class Amenities{
     private String bathrooms;
-
-    private boolean food;
+    private String food;
     private String noise;
     private String outlets;
     private String space;
@@ -13,7 +12,7 @@ public class Amenities{
 
     }
 
-    public Amenities(String bathrooms, boolean food, String noise, String outlets, String space, String wifi) {
+    public Amenities(String bathrooms, String food, String noise, String outlets, String space, String wifi) {
         this.bathrooms = bathrooms;
         this.food = food;
         this.noise = noise;
@@ -36,12 +35,13 @@ public class Amenities{
         }
     }
 
-    public boolean isFood() {
+
+    public String getFood() {
         return food;
     }
 
-    public boolean setFood(boolean food) {
-        if(food) {
+    public Boolean setFood(String food) {
+        if(food=="yes"||food=="no") {
             this.food = food;
             return true;
         }
@@ -69,7 +69,7 @@ public class Amenities{
     }
 
     public boolean setOutlets(String outlets) {
-        if(outlets == "many" || outlets == "little") {
+        if(outlets == "yes" || outlets == "none") {
             this.outlets = outlets;
             return true;
         }
@@ -83,7 +83,7 @@ public class Amenities{
     }
 
     public boolean setSpace(String space) {
-        if(space == "roomy" || space == "cozy") {
+        if(space == "spacious" || space == "cozy") {
             this.space = space;
             return true;
         }
@@ -97,7 +97,7 @@ public class Amenities{
     }
 
     public boolean setWifi(String wifi) {
-        if(wifi == "fast" || wifi == "slow") {
+        if(wifi == "yes" || wifi == "no") {
             this.wifi = wifi;
             return true;
         }
