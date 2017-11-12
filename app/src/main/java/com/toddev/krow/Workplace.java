@@ -4,36 +4,55 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class Workplace {
     private String name;
-    private LatLng location;
     private Amenities amenities;
-    private int numRated;
+    private int numrated;
     private double rating;
     private String creator_id;
     private String description;
+    private double latitude;
+    private double longitude;
+
+    public Workplace(String name, Amenities amenities, int numrated, double rating, String creator_id, String description, double latitude, double longitude, String address) {
+        this.name = name;
+        this.amenities = amenities;
+        this.numrated = numrated;
+        this.rating = rating;
+        this.creator_id = creator_id;
+        this.description = description;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.address = address;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 
     public Workplace(){
 
     }
 
 
-    public Workplace(String name, LatLng location, Amenities amenities, int numRated,
-                     double rating, String creator_id, String description, String address) {
-        this.name = name;
-        this.location = location;
-        this.amenities = amenities;
-        this.numRated = numRated;
-        this.rating = rating;
-        this.creator_id = creator_id;
-        this.description = description;
-        this.address = address;
-    }
+
 
     public boolean newRating(int userRating) {
         if(userRating <= 5) {
-            double sumOfRatings = this.rating * this.numRated;
-            this.numRated++;
+            double sumOfRatings = this.rating * this.numrated;
+            this.numrated++;
             sumOfRatings += userRating;
-            this.rating = sumOfRatings/this.numRated;
+            this.rating = sumOfRatings/this.numrated;
             return true;
         }
         else {
@@ -42,12 +61,12 @@ public class Workplace {
     }
 
 
-    public int getNumRated() {
-        return numRated;
+    public int getNumrated() {
+        return numrated;
     }
 
-    public void setNumRated(int numRated) {
-        this.numRated = numRated;
+    public void setNumrated(int numrated) {
+        this.numrated = numrated;
     }
 
     public double getRating() {
@@ -103,14 +122,5 @@ public class Workplace {
         this.name = name;
     }
 
-    //funcation to get a location of a workplace
-    public LatLng getLocation() {
-        return location;
-    }
-
-    //function to set the lcoation of a workplace
-    public void setLocation(LatLng location) {
-        this.location = location;
-    }
 
 }

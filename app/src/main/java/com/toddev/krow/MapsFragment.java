@@ -14,6 +14,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.ChildEventListener;
@@ -21,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -33,6 +35,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     View rootView;
     private BottomSheetBehavior mBottomSheetBehavior;
     private TextView sheetTextName;
+    private TextView sheetTextRating;
+    private TextView sheetTextDesc;
+    private TextView sheetNumRated;
+
+
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference workref = database.getReference("workspaces");
     public MapsFragment() {
@@ -55,6 +62,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         rootView = inflater.inflate(R.layout.activity_maps, container, false);
         sheetTextName = rootView.findViewById(R.id.name);
+        sheetTextRating = rootView.findViewById(R.id.rating);
+        sheetTextDesc = rootView.findViewById(R.id.desc);
+        sheetNumRated = rootView.findViewById(R.id.numrated);
         // get the mapview from layout based on id map
         mapView = (MapView) rootView.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
@@ -70,13 +80,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        Log.e(workref.getDatabase().toString(),"");
+        //mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json);
         workref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.e("child was", "added");
                 Workplace place = dataSnapshot.getValue(Workplace.class);
-                mMap.addMarker(new MarkerOptions().position(place.getLocation()).title(place.getName()));
+                Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(),place.getLongitude())).title(place.getName()));
+                marker.setTag(dataSnapshot.getValue(Workplace.class));
             }
 
             @Override
@@ -111,6 +121,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             {
                 //create a snackbar displaying the name
                 sheetTextName.setText(marker.getTitle());
+                Workplace markerobj = (Workplace) marker.getTag();
+                sheetTextRating.setText("Rating: "+markerobj.getRating());
+                sheetTextDesc.setText(markerobj.getDescription());
+                sheetNumRated.setText(Integer.toString(markerobj.getNumrated()) + "Reviews");
                 //move the camera to the marker location and zoom to street level
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
                 mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
