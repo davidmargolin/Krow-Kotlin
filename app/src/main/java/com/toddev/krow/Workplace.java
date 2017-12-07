@@ -1,7 +1,5 @@
 package com.toddev.krow;
 
-import com.google.android.gms.maps.model.LatLng;
-
 public class Workplace {
     private String name;
     private Amenities amenities;
