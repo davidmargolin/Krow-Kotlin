@@ -31,7 +31,7 @@ class Amenities() {
     var space: String? = null
     var wifi: String? = null
 
-    constructor(bathrooms: String?, food: String?, noise: String?, outlets: String?, space: String?,
+    constructor(bathrooms: String, food: String, noise: String, outlets: String, space: String,
                 wifi: String) : this() {
         this.bathrooms = bathrooms
         this.food = food
