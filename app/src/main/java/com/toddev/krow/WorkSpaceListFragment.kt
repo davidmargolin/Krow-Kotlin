@@ -1,6 +1,5 @@
 package com.toddev.krow
 
-import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.app.Fragment
@@ -20,10 +19,6 @@ class WorkSpaceListFragment : Fragment() {
         this.workplaces = workplaces
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_workspace_list, container, false) as RecyclerView
@@ -36,15 +31,6 @@ class WorkSpaceListFragment : Fragment() {
         mBottomSheetBehavior.peekHeight = 800
         mBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         return view
-    }
-
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-    }
-
-    override fun onDetach() {
-        super.onDetach()
     }
 
 }

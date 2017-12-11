@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="workplace" type="com.toddev.krow.Workplace"/>
+        <import type="android.support.v4.content.ContextCompat" />
+    </data>
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:orientation="vertical">
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,7 +26,7 @@
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="name"
+                    android:text="@{workplace.name}"
                     android:textSize="20sp" />
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -35,6 +38,7 @@
 
                     <TextView
                         android:id="@+id/rating"
+                        android:text='@{workplace.numrated>0 ? "Rating: " + workplace.rating : "Not Yet Rated"}'
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="end"
@@ -42,6 +46,7 @@
 
                     <TextView
                         android:id="@+id/numrated"
+                        android:text='@{workplace.numrated>0 ? workplace.numrated + " Reviews":""}'
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="end"
@@ -57,7 +62,7 @@
                 android:ellipsize="end"
                 android:textSize="16sp"
                 android:maxLines="2"
-                android:text="address"
+                android:text="@{workplace.address}"
                 android:layout_marginBottom="8dp"/>
 
             <TextView
@@ -66,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:text="description" />
+                android:text="@{workplace.description}" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
     <android.support.v7.widget.CardView
@@ -78,7 +83,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -89,8 +93,8 @@
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:drawableTop="@drawable/ic_action_wifi"
-                    android:text="Fast Wifi"
+                    android:drawableTop='@{ContextCompat.getDrawable(context, workplace.getWorkResource(workplace.amenities.wifi))}'
+                    android:text="@{workplace.amenities.wifi}"
                     android:id="@+id/wifi"
                     android:textAllCaps="false"
                     android:background="@android:color/transparent"/>
@@ -98,8 +102,8 @@
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:drawableTop="@drawable/ic_action_power"
-                    android:text="Few Outlets"
+                    android:drawableTop="@drawable/power"
+                    android:text="@{workplace.amenities.outlets}"
                     android:id="@+id/outlets"
                     android:textAllCaps="false"
                     android:background="@android:color/transparent"/>
@@ -107,8 +111,8 @@
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:drawableTop="@drawable/ic_action_restaurant_menu"
-                    android:text="Food Available"
+                    android:drawableTop="@drawable/food"
+                    android:text="@{workplace.amenities.food}"
                     android:id="@+id/food"
                     android:textAllCaps="false"
                     android:background="@android:color/transparent"/>
@@ -121,8 +125,8 @@
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableTop="@drawable/ic_action_volume_up"
-                    android:text="Loud"
+                    android:drawableTop='@{ContextCompat.getDrawable(context, workplace.getWorkResource(workplace.amenities.noise))}'
+                    android:text="@{workplace.amenities.noise}"
                     android:id="@+id/volume"
                     android:textAllCaps="false"
                     android:background="@android:color/transparent"/>
@@ -130,8 +134,8 @@
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableTop="@drawable/ic_action_bathroom"
-                    android:text="Bathroom"
+                    android:drawableTop="@drawable/bathroom"
+                    android:text="@{workplace.amenities.bathrooms}"
                     android:id="@+id/bathroom"
                     android:textAllCaps="false"
                     android:background="@android:color/transparent"/>
@@ -139,8 +143,8 @@
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableTop="@drawable/ic_seat_legroom_reduced_grey600_24dp"
-                    android:text="Cozy Seating"
+                    android:drawableTop='@{ContextCompat.getDrawable(context, workplace.getWorkResource(workplace.amenities.space))}'
+                    android:text="@{workplace.amenities.space}"
                     android:id="@+id/seats"
                     android:textAllCaps="false"
                     android:background="@android:color/transparent"/>
@@ -170,3 +174,4 @@
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>
+</layout>

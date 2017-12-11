@@ -17,7 +17,16 @@ class Workplace(val name: String?=null, val amenities: Amenities?=null, var numr
         }
     }
 
-    // static method getWorkResource has been moved to it's own Tools.kt
-    // Alternative would have been a 'Companion' object.
+    fun getWorkResource(keyword: String): Int {
+        when (keyword) {
+            "Quiet" -> return R.drawable.quiet
+            "Loud" -> return R.drawable.loud
+            "Cozy" -> return R.drawable.cozy
+            "Spacious" -> return R.drawable.spacious
+            "Wifi" -> return R.drawable.wifi
+            "No Wifi" -> return R.drawable.no_wifi
+            else -> return 0
+        }
+    }
 
 }
