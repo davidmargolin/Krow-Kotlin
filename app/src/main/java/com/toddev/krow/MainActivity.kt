@@ -42,9 +42,9 @@ class MainActivity : AppCompatActivity() {
         override fun getItem(position: Int): Fragment? {
             //create frag based on position
             when (position) {
-                0 -> return ProfileFragment.newInstance()
+                0 -> return ProfileFragment()
                 1 -> {
-                    mapsFragment = MapsFragment.newInstance()
+                    mapsFragment = MapsFragment()
                     return mapsFragment
                 }
                 else -> return null
