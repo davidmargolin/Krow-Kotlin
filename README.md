@@ -1,4 +1,4 @@
-<h1><img src="/app/src/main/res/mipmap-xhdpi/ic_launcher.png"></img>    krow - change the way you work</h1>
+<h1><img src="/app/src/main/res/mipmap-hdpi/ic_launcher.png"></img>    krow - change the way you work</h1>
 
 Find remote locations to work based on criteria like Noise Levels, Restrooms, and Wifi.
 
